@@ -3,10 +3,10 @@
 import numpy as np 
 from numpy import random 
 from collections import deque
-from numpy import random
 
 #elements of next class are update packets that we are studying in our
 #queueing system. It is the central class of this model. 
+
 class Packet:
     """
     Elements of class Packet present packet updates 
@@ -118,7 +118,7 @@ class System:
     specific arrival, serving and other policies. 
     """
 
-    def __init__(self, arrivals, servings, gateway=False, num_of_queues=1, num_of_servers=1, queue=deque([]), queue_capacity=None, FIFO=True):
+    def __init__(self, arrivals, servings, gateway=False, num_of_queues=1, num_of_servers=1, queue=deque([]), queue_capacity=None, FIFO=True, age=0):
         """
         Arguments
         ---------
@@ -158,6 +158,7 @@ class System:
         self.queue = queue
         self.queue_capacity = queue_capacity
         self.FIFO = FIFO
+        self.age = 0
 
     #Example of an element is simple M/M/1 queue with exponential interarrival time, 
     #exponential serving time, one server and one queue, without gateway and infinite
@@ -303,6 +304,12 @@ class System:
             return l
         l = to_list(self.queue)
         self.queue = deque(random.permutation(l))
+
+    def increase_age(self, time_delta):
+        self.age += time_delta
+
+    def set_age(self, age):
+        self.age = age
 
 class OneQueueServer(System):
     
