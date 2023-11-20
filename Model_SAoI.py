@@ -208,7 +208,7 @@ class System:
             list_of_arrivals = []
             while t <= total_time: 
                 t += dt 
-                list_of_arrivals.append(dt)
+                list_of_arrivals.append(t)
             return list_of_arrivals
         elif letter == "U":
             #we deal with continuos uniform interarrival time
@@ -255,7 +255,7 @@ class System:
             t = 0
             dt = (1/serving_rate)
             n = int(total_time/dt) + 1
-            list_of_arrivals = [dt] * n
+            list_of_servings = [dt] * n
             return list_of_servings
         elif letter == "U":
             #we deal with uniform continuous random variable 
@@ -306,9 +306,11 @@ class System:
         self.queue = deque(random.permutation(l))
 
     def increase_age(self, time_delta):
+        """Increase age for time_delta"""
         self.age += time_delta
 
     def set_age(self, age):
+        """Sets age of the system to age"""
         self.age = age
 
 class OneQueueServer(System):
