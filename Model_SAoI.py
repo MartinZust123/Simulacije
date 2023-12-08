@@ -118,7 +118,7 @@ class System:
     specific arrival, serving and other policies. 
     """
 
-    def __init__(self, arrivals, servings, gateway=False, num_of_queues=1, num_of_servers=1, queue=deque([]), queue_capacity=None, FIFO=True, age=0):
+    def __init__(self, arrivals, servings, gateway=False, num_of_entries=1, num_of_queues=1, num_of_servers=1, queue=deque([]), queue_capacity=None, FIFO=True, age=0):
         """
         Arguments
         ---------
@@ -155,6 +155,7 @@ class System:
         self.gateway = gateway 
         self.num_of_queues = num_of_queues
         self.num_of_servers = num_of_servers
+        self.num_of_entries = num_of_entries
         self.queue = queue
         self.queue_capacity = queue_capacity
         self.FIFO = FIFO
@@ -192,33 +193,43 @@ class System:
             list of arrival times of specific system.  
         """
         [letter, arrival_rate] = self.arrivals
+        n = self.num_of_entries
         if letter == "M":
-            #we deal with exponential interarrival times
-            t = 0
-            list_of_arrivals = []
-            while t <= total_time: #when we exceed total_time we stop
-                dt = random.exponential(scale=(1/arrival_rate)) #interarrival time
-                t += dt
-                list_of_arrivals.append(t)
-            return list_of_arrivals
+            table_of_arrivals = []
+            for i in range(n):
+                #we deal with exponential interarrival times
+                t = 0
+                list_of_arrivals = []
+                while t <= total_time: #when we exceed total_time we stop
+                    dt = random.exponential(scale=(1/arrival_rate)) #interarrival time
+                    t += dt
+                    list_of_arrivals.append(t)
+                table_of_arrivals.append(list_of_arrivals)
+            return table_of_arrivals
         elif letter == "D":
-            #we deal with deterministic iterarrival times
-            t = 0
-            dt = (1/arrival_rate) #interarrival time
-            list_of_arrivals = []
-            while t <= total_time: 
-                t += dt 
-                list_of_arrivals.append(t)
-            return list_of_arrivals
+            table_of_arrivals = []
+            for i in range(n):
+                #we deal with deterministic iterarrival times
+                t = 0
+                dt = (1/arrival_rate) #interarrival time
+                list_of_arrivals = []
+                while t <= total_time: 
+                    t += dt 
+                    list_of_arrivals.append(t)
+                table_of_arrivals.append(list_of_arrivals)
+            return table_of_arrivals
         elif letter == "U":
-            #we deal with continuos uniform interarrival time
-            t = 0
-            list_of_arrivals = []
-            while t <= total_time:
-                dt = random.uniform(0,2/arrival_rate) #interarrival time
-                t += dt 
-                list_of_arrivals.append(t)
-            return list_of_arrivals
+            table_of_arrivals = []
+            for i in range(n):
+                #we deal with continuos uniform interarrival time
+                t = 0
+                list_of_arrivals = []
+                while t <= total_time:
+                    dt = random.uniform(0,2/arrival_rate) #interarrival time
+                    t += dt 
+                    list_of_arrivals.append(t)
+                table_of_arrivals.append(list_of_arrivals)
+            return table_of_arrivals
         else:
             raise ValueError("Wrong input!")
         #note that arrival times are not interarrival but timestamps at which 
@@ -277,9 +288,10 @@ class System:
     def create_packet(self, size, time):
         if self.gateway == True:
             trans = 5 
+            return Packet(size, trans, time, "bg")
         else:
             trans = 0
-        return Packet(size, trans, time, "bg")
+            return Packet(size, trans, time, "ag")
 
     #we interpret packet that is in the last position of deque as the packet that is in the last position of queue.
     #That is why we alway add elements to the end of deque, that is we append them. 
