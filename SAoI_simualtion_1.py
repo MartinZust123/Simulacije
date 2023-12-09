@@ -5,6 +5,22 @@ from Model_SAoI import System, Packet
 from collections import deque
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd 
+import os 
+
+# Get current working folder
+current_directory = os.getcwd()
+
+# Build absolute path to the file
+file_path = os.path.join(current_directory, "Obravnava CI za Veliko Britanijo", "Carbon_Intensity_Data_jan.csv")
+
+# Read CSV file
+df_jan = pd.read_csv(file_path)
+
+# Create list of values of CI
+CI_list = []
+for val in df_jan["Actual Carbon Intensity (gCO2/kWh)"]:
+    CI_list.append(val)
 
 #We first create our system model in which we are going to perform simulations.
 system = System(["M", 0.3], ["M", 1], gateway=True, num_of_entries=5)
@@ -63,4 +79,3 @@ for i in range(10000):
     q.append(len(system.queue))
 
 avg_age = sum(age_list)/len(age_list)
-print(avg_age)

@@ -50,4 +50,20 @@ for i in range(10000):
     bg.append(len(before_gateway))
     q.append(len(sistem.queue))
 
-print(q)
+#The next thing the we are trying to do is to import csv file with data about CI in Great Britain and transforming it into a list.
+import pandas as pd 
+import os 
+
+# Pridobite trenutno delovno mapo
+current_directory = os.getcwd()
+
+# Zgradite absolutno pot do datoteke
+file_path = os.path.join(current_directory, "Obravnava CI za Veliko Britanijo", "Carbon_Intensity_Data_jan.csv")
+
+# Preberite CSV datoteko
+df_jan = pd.read_csv(file_path)
+
+CI_list = []
+for val in df_jan["Actual Carbon Intensity (gCO2/kWh)"]:
+    CI_list.append(val)
+print(CI_list)
