@@ -124,6 +124,6 @@ for i in range(80):
     x_values.append(x)
     x += 0.01
 
-plt.plot(x_values, CF_avg_list)
+#plt.plot(x_values, CF_avg_list)
 plt.plot(x_values, age_avg_list)
 plt.show()
