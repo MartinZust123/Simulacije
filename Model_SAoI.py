@@ -288,10 +288,10 @@ class System:
     def create_packet(self, size, time):
         if self.gateway == True:
             trans = 0.05 
-            return Packet(size, trans, time, "bg")
+            return Packet(size=size, trans=trans, gen_time=time, position="bg")
         else:
             trans = 0
-            return Packet(size, trans, time, "ag")
+            return Packet(size=size, trans=trans, gen_time=time, position="ag")
 
     #we interpret packet that is in the last position of deque as the packet that is in the last position of queue.
     #That is why we alway add elements to the end of deque, that is we append them. 
