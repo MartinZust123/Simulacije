@@ -44,7 +44,7 @@ for mul in range(80):
     time = 0
     inter_serving_time = 0
     age = 0
-    ar_ind_list = [0 for i in range(5)]
+    ar_ind = 0
     ser_ind = 0
     before_gateway = []
     after_gateway = []
@@ -58,17 +58,17 @@ for mul in range(80):
     power_list = []
     
     power_dic = {1:[0,0]} #first component says what is the power of i-th connection and second what time it remains.
-    for i in range(4000000):
+    for i in range(400000):
         #We increase all of the parameters that are dependant on time
         time += 0.01
         inter_serving_time += 0.01
         age += 0.01
         #We welcome new arrivals from all of the sources if there are any
-        if time > table_of_arrivals[i][ar_ind_list[i]]:
+        if time > table_of_arrivals[0][ar_ind]:
             pack = system.create_packet(10, time)
             before_gateway.append(pack)
-            ar_ind_list[i] += 1
-            power_dic[i] = [5,0.05]
+            ar_ind += 1
+            power_dic[1] = [5,0.05]
         #We refresh the time remaining values in power_dic
         for e in power_dic:
             power_dic[e][1] -= 0.01
@@ -121,3 +121,4 @@ for i in range(80):
     x += 0.01
 
 plt.plot(x_values, CF_avg_list)
+plt.show()
