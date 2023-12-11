@@ -23,7 +23,7 @@ for val in df_jan["Actual Carbon Intensity (gCO2/kWh)"]:
     CI_list.append(val)
 
 #We first create our system model in which we are going to perform simulations.
-system = System(["M", 0.3], ["M", 1], gateway=True, num_of_entries=5)
+system = System(["M", 0.18], ["M", 1], gateway=True, num_of_entries=5)
 
 #We than create arrivals. It is list with 5 lists. In each of those lists we have 
 #values of arrival times for each entry.
@@ -43,6 +43,7 @@ after_gateway = []
 age_list = []
 bg = []
 q = []
+time_list = []
 for i in range(10000):
     time += 0.01
     inter_serving_time += 0.01
@@ -75,7 +76,15 @@ for i in range(10000):
         ser_ind += 1
         inter_serving_time = 0
     age_list.append(age)
+    time_list.append(time)
     bg.append(len(before_gateway))
     q.append(len(system.queue))
 
-avg_age = sum(age_list)/len(age_list)
+time_os = np.array(time_list)
+age_os = np.array(age_list)
+
+plt.plot(time_os, age_os)
+plt.xlabel("time")
+plt.ylabel("AoI")
+plt.legend()
+plt.show()
