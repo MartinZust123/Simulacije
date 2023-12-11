@@ -20,6 +20,12 @@ df_jan = pd.read_csv(file_path)
 # Create list of values of CI
 CI_list = df_jan["Actual Carbon Intensity (gCO2/kWh)"].tolist()
 
+#We need to change CI_list, such that it will have constant values of CI for half an hour.
+CI_list1 = []
+for i in range(10):
+    for j in range(30*60*100):
+        CI_list1.append(CI_list[i])
+
 #We first create our system model in which we are going to perform simulations.
 system = System(["M", 0.18], ["M", 1], gateway=True, num_of_entries=5)
 
@@ -48,7 +54,7 @@ busy = 0
 power_list = []
 
 power_dic = {1:[0,0], 2:[0,0], 3:[0,0], 4:[0,0], 5:[0,0]} #first component says what is the power of i-th connection and second what time it remains.
-for i in range(100000):
+for i in range(10000):
     #We increase all of the parameters that are dependant on time
     time += 0.01
     inter_serving_time += 0.01
@@ -101,7 +107,7 @@ for i in range(100000):
     for e in power_dic:
         power += power_dic[e][0]
     power_list.append(power)
-    CF += power*0.01
+    CF += (power*CI_list[i])*0.01
     CF_list.append(CF/time)
 
 time_os = np.array(time_list)
@@ -109,8 +115,11 @@ age_os = np.array(age_list)
 CF_os = np.array(CF_list)
 power_os = np.array(power_list)
 
-#plt.plot(time_os, CF_os)
-#plt.xlabel("time")
-#plt.ylabel("power")
-#plt.legend()
-#plt.show()
+plt.plot(time_os, CF_os, label="CF")
+plt.plot(time_os, power_os, label="power")
+plt.xlabel("time")
+plt.ylabel("power and CF")
+plt.legend()
+plt.show()
+
+
