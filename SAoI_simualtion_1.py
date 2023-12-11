@@ -44,6 +44,9 @@ age_list = []
 bg = []
 q = []
 time_list = []
+CF = 0
+CF_list = []
+power_dic = {1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0)} #first component says what is the power of i-th connection and second what time it remains.
 for i in range(10000):
     time += 0.01
     inter_serving_time += 0.01
@@ -53,6 +56,11 @@ for i in range(10000):
             pack = system.create_packet(10, time)
             before_gateway.append(pack)
             ar_ind_list[i] += 1
+            power_dic[i] = (5,5)
+    for e in power_dic:
+        power_dic[e][1] -= 0.01
+        if power_dic[e][1] < 0:
+            power_dic[e] = (0,0)
     removal = []
     for i in range(len(before_gateway)):
         before_gateway[i].trans -= 0.01
