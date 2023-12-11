@@ -52,6 +52,8 @@ CF = 0
 CF_list = []
 busy = 0
 power_list = []
+po_list = []
+po = 0
 
 power_dic = {1:[0,0], 2:[0,0], 3:[0,0], 4:[0,0], 5:[0,0]} #first component says what is the power of i-th connection and second what time it remains.
 for i in range(10000):
@@ -109,11 +111,21 @@ for i in range(10000):
     power_list.append(power)
     CF += (power*CI_list[i])*0.01
     CF_list.append(CF/time)
+    po += power*0.01
+    po_list.append(po/time)
+
+po_avg = sum(po_list)/len(po_list)
+CF_avg = sum(CF_list)/len(CF_list)
+for i in range(len(po_list)):
+    po_list[i] = po_list[i]/po_avg
+
+for i in range(len(CF_list)):
+    CF_list[i] = CF_list[i]/CF_avg
 
 time_os = np.array(time_list)
 age_os = np.array(age_list)
 CF_os = np.array(CF_list)
-power_os = np.array(power_list)
+power_os = np.array(po_list)
 
 plt.plot(time_os, CF_os, label="CF")
 plt.plot(time_os, power_os, label="power")
