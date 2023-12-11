@@ -18,9 +18,7 @@ file_path = os.path.join(current_directory, "Obravnava CI za Veliko Britanijo", 
 df_jan = pd.read_csv(file_path)
 
 # Create list of values of CI
-CI_list = []
-for val in df_jan["Actual Carbon Intensity (gCO2/kWh)"]:
-    CI_list.append(val)
+CI_list = df_jan["Actual Carbon Intensity (gCO2/kWh)"].tolist()
 
 #We first create our system model in which we are going to perform simulations.
 system = System(["M", 0.18], ["M", 1], gateway=True, num_of_entries=5)
@@ -111,8 +109,8 @@ age_os = np.array(age_list)
 CF_os = np.array(CF_list)
 power_os = np.array(power_list)
 
-plt.plot(time_os, CF_os)
-plt.xlabel("time")
-plt.ylabel("power")
-plt.legend()
-plt.show()
+#plt.plot(time_os, CF_os)
+#plt.xlabel("time")
+#plt.ylabel("power")
+#plt.legend()
+#plt.show()
