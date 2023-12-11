@@ -27,10 +27,10 @@ system = System(["M", 0.18], ["M", 1], gateway=True, num_of_entries=5)
 
 #We than create arrivals. It is list with 5 lists. In each of those lists we have 
 #values of arrival times for each entry.
-table_of_arrivals = system.create_arrivals(1000)
+table_of_arrivals = system.create_arrivals(10000)
 
 #we also create list of servings.
-list_of_servings = system.create_servings(1000)
+list_of_servings = system.create_servings(10000)
 
 #Now we simulate this queue.
 time = 0
@@ -47,8 +47,10 @@ time_list = []
 CF = 0
 CF_list = []
 busy = 0
-power_dic = {1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0)} #first component says what is the power of i-th connection and second what time it remains.
-for i in range(10000):
+power_list = []
+
+power_dic = {1:[0,0], 2:[0,0], 3:[0,0], 4:[0,0], 5:[0,0]} #first component says what is the power of i-th connection and second what time it remains.
+for i in range(100000):
     #We increase all of the parameters that are dependant on time
     time += 0.01
     inter_serving_time += 0.01
@@ -59,12 +61,12 @@ for i in range(10000):
             pack = system.create_packet(10, time)
             before_gateway.append(pack)
             ar_ind_list[i] += 1
-            power_dic[i] = (5,5)
+            power_dic[i] = [5,5]
     #We refresh the time remaining values in power_dic
     for e in power_dic:
         power_dic[e][1] -= 0.01
         if power_dic[e][1] < 0:
-            power_dic[e] = (0,0)
+            power_dic[e] = [0,0]
     removal = [] #list with elements to remove from before_gateway
     for i in range(len(before_gateway)):
         before_gateway[i].trans -= 0.01
@@ -101,12 +103,16 @@ for i in range(10000):
     for e in power_dic:
         power += power_dic[e][0]
     power_list.append(power)
+    CF += power*0.01
+    CF_list.append(CF/time)
 
 time_os = np.array(time_list)
 age_os = np.array(age_list)
+CF_os = np.array(CF_list)
+power_os = np.array(power_list)
 
-plt.plot(time_os, age_os)
+plt.plot(time_os, CF_os)
 plt.xlabel("time")
-plt.ylabel("AoI")
+plt.ylabel("power")
 plt.legend()
 plt.show()
