@@ -287,7 +287,7 @@ class System:
 
     def create_packet(self, size, time):
         if self.gateway == True:
-            trans = 5 
+            trans = 0.05 
             return Packet(size, trans, time, "bg")
         else:
             trans = 0
