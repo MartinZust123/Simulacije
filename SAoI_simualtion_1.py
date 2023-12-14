@@ -67,7 +67,7 @@ for mul in range(80):
         age += 0.01
         #We welcome new arrivals from all of the sources if there are any
         if time > table_of_arrivals[0][ar_ind]:
-            pack = system.create_packet(10, time)
+            pack = system.create_packet(size=10, time=time)
             before_gateway.append(pack)
             ar_ind += 1
             power_dic[1] = [5,0.05]
@@ -127,5 +127,5 @@ for i in range(80):
     x += 0.01
 
 #plt.plot(x_values, CF_avg_list)
-plt.plot(x_values, CF_avg_list)
+plt.plot(x_values, age_avg_list)
 plt.show()
