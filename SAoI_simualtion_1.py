@@ -22,7 +22,7 @@ CI_list = df_jan["Actual Carbon Intensity (gCO2/kWh)"].tolist()
 
 #We need to change CI_list, such that it will have constant values of CI for half an hour.
 CI_list1 = []
-for i in range(30):
+for i in range(500):
     for j in range(30*60*100):
         CI_list1.append(CI_list[i])
 
@@ -30,7 +30,7 @@ def objective_function(aoi, cf, a):
     return aoi*(cf**a)
 
 objective_table = []
-for a in [0.3,0.6,0.9]:
+for a in [0.3,0.6,0.9,2,4]:
 
     objective_list = []
     
@@ -41,10 +41,10 @@ for a in [0.3,0.6,0.9]:
         
         #We than create arrivals. It is list with 5 lists. In each of those lists we have 
         #values of arrival times for each entry.
-        table_of_arrivals = system.create_arrivals(50000)
+        table_of_arrivals = system.create_arrivals(500000)
         
         #we also create list of servings.
-        list_of_servings = system.create_servings(50000)
+        list_of_servings = system.create_servings(500000)
         
         #Now we simulate this queue.
         time = 0
@@ -64,7 +64,7 @@ for a in [0.3,0.6,0.9]:
         power_list = []
         
         power_dic = {1:[0,0]} #first component says what is the power of i-th connection and second what time it remains.
-        for i in range(2000000):
+        for i in range(10000000):
             #We increase all of the parameters that are dependant on time
             time += 0.01
             inter_serving_time += 0.01
@@ -117,7 +117,7 @@ for a in [0.3,0.6,0.9]:
                 power += power_dic[e][0]
             CF += (power*CI_list1[i])*0.01
         
-        CF_avg = CF/2000000
+        CF_avg = CF/10000000
         age_avg = sum(age_list)/len(age_list)
         objective_list.append(objective_function(age_avg, CF_avg, a))
     
@@ -133,5 +133,7 @@ for i in range(80):
 plt.plot(x_values, objective_table[0], label="a=0.3")
 plt.plot(x_values, objective_table[1], label="a=0.6")
 plt.plot(x_values, objective_table[2], label="a=0.9")
+plt.plot(x_values, objective_table[3], label="a=2")
+plt.plot(x_values, objective_table[4], label="a=3")
 plt.legend()
 plt.show()
