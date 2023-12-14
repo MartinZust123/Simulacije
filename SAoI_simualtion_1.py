@@ -28,6 +28,7 @@ for i in range(30):
 
 CF_avg_list = []
 age_avg_list = []
+objective_list = []
 
 for mul in range(80):
 
@@ -116,6 +117,7 @@ for mul in range(80):
     CF_avg_list.append(CF_avg)
     age_avg = sum(age_list)/len(age_list)
     age_avg_list.append(age_avg)
+    objective_list.append(CF_avg*age_avg)
 
 
 x_values = []
@@ -125,5 +127,5 @@ for i in range(80):
     x += 0.01
 
 #plt.plot(x_values, CF_avg_list)
-plt.plot(x_values, age_avg_list)
+plt.plot(x_values, CF_avg_list)
 plt.show()
