@@ -33,17 +33,19 @@ objective_table = []
 for a in [0.3,0.6,0.9,1.2,1.4]:
 
     objective_list = []
+    age_avg_list = []
     
+    system = {}
     for mul in range(80):
 
         #We first create our system model in which we are going to perform simulations.
-        system = System(["M", 0.1 + mul*0.01], ["M", 1], queue=deque([]), gateway=False, num_of_entries=1)
+        system[mul] = System(["M", 0.1 + mul*0.01], ["M", 1], queue=deque([]), gateway=False, num_of_entries=1)
         
         #We than create arrivals. 
-        table_of_arrivals = system.create_arrivals(2000)
+        table_of_arrivals = system[mul].create_arrivals(2000)
         
         #we also create list of servings.
-        list_of_servings = system.create_servings(2000)
+        list_of_servings = system[mul].create_servings(2000)
 
         #Now we simulate this queue.
         time = 0
@@ -59,7 +61,7 @@ for a in [0.3,0.6,0.9,1.2,1.4]:
         power_list = []
         powerv = [0,0] #first component says what is the power of the connection between source and server and what time it remains
 
-        for i in range(100000):
+        for i in range(10000000):
             #We increase all of the parameters that are dependant on time
             time += 0.01
             inter_serving_time += 0.01
@@ -67,6 +69,7 @@ for a in [0.3,0.6,0.9,1.2,1.4]:
             #We welcome new arrivals from all of the sources if there are any
             if time > table_of_arrivals[0][ar_ind]:
                 pack = Packet(size=10, gen_time=time, trans=0, position="q")
+                system[mul].queue.append(pack)
                 ar_ind += 1
                 powerv = [5,0.05]
             #We refresh the time remaining value in power
@@ -75,21 +78,22 @@ for a in [0.3,0.6,0.9,1.2,1.4]:
                 powerv = [0,0]
             removal = [] #list with elements to remove from before_gateway
             #We check whether we must take a new element to the server
-            if inter_serving_time > list_of_servings[ser_ind] and len(system.queue) == 0:
+            if inter_serving_time > list_of_servings[ser_ind] and len(system[mul].queue) == 0:
                 busy = 0
-            elif inter_serving_time > list_of_servings[ser_ind] and len(system.queue) != 0:
-                age = time - system.queue[0].gen_time
-                system.queue.popleft()
+            elif inter_serving_time > list_of_servings[ser_ind] and len(system[mul].queue) != 0:
+                age = time - system[mul].queue[0].gen_time
+                system[mul].queue.popleft()
                 ser_ind += 1
                 inter_serving_time = 0
                 busy = 1
             age_list.append(age)
-            q.append(len(system.queue))
+            q.append(len(system[mul].queue))
             power = 10 + 10*busy + powerv[0]
             CF += (power*CI_list1[i])*0.01
         
-        CF_avg = CF/100000
+        CF_avg = CF/10000000
         age_avg = sum(age_list)/len(age_list)
+        age_avg_list.append(age_avg)
         objective_list.append(objective_function(age_avg, CF_avg, a))
     
     objective_table.append(objective_list)
@@ -101,9 +105,9 @@ for i in range(80):
     x += 0.01
 
 #plt.plot(x_values, CF_avg_list)
-plt.plot(x_values, objective_table[0], label="a=0.3")
-plt.plot(x_values, objective_table[1], label="a=0.6")
-plt.plot(x_values, objective_table[2], label="a=0.9")
+#plt.plot(x_values, objective_table[0], label="a=0.3")
+#plt.plot(x_values, objective_table[1], label="a=0.6")
+#plt.plot(x_values, objective_table[2], label="a=0.9")
 plt.plot(x_values, objective_table[3], label="a=1.2")
 plt.plot(x_values, objective_table[4], label="a=1.4")
 plt.legend()
