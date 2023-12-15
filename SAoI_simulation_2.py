@@ -42,10 +42,10 @@ for a in [0.3,0.6,0.9,1.2,1.4]:
         system[mul] = System(["M", 0.1 + mul*0.01], ["M", 1], queue=deque([]), gateway=False, num_of_entries=1)
         
         #We than create arrivals. 
-        table_of_arrivals = system[mul].create_arrivals(2000)
+        table_of_arrivals = system[mul].create_arrivals(200000)
         
         #we also create list of servings.
-        list_of_servings = system[mul].create_servings(2000)
+        list_of_servings = system[mul].create_servings(200000)
 
         #Now we simulate this queue.
         time = 0
