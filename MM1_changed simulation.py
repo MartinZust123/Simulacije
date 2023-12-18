@@ -6,11 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy import random
 
-# We first create some arrivals
-#arrivals = []
-#arrivals.append(random.exponential(scale=2,size=1))
-#for i in range(200):
-#    arrivals.append(arrivals[-1] + random.exponential(scale=2, size=1))
+#We first create some arrivals
 arrivals = random.exponential(scale=2,size=200)
 
 # We than create some serving times 
@@ -31,10 +27,19 @@ for i in range(200):
         time += arrivals[ar_ind]
         queue.append(time)
         ar_ind += 1
+        if busy == 0:
+            age_list.append(age_list[-1] + arrivals[ar_ind - 1])
+            age_list.append(0)
+            busy = 1
+        else:
+            servings[ser_ind] -= arrivals[ar_ind - 1]
     else:
         if len(queue) != 0:
             time += servings[ser_ind]
             age_list.append(age_list[-1] + servings[ser_ind])
             age_list.append(time - queue[0])
             queue.popleft()
-            
+            ser_ind += 1
+            busy = 1
+        else:
+            busy = 0
